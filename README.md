@@ -1,44 +1,55 @@
-# COP5615 Distributed Operating System Principles Project 3
+# COP5615 Distributed Operating System Principles Project 4 Part1
 
-## Chord-P2P-System-And-Simulation-Actor-Model-F#-Akka.Net
+## Twitter-Clone-Actor-Model-F#-Akka.Net
 
 ## Project Description
 
-You have to implement the network join and routing as described in the Chord paper (Section 4) and encode the simple application that associates a key (same as the ids used in Chord) with a string. You can change the message type sent and the specific activity as long as you implement it using a similar API to the one described in the paper. <br>
-Link: https://pdos.csail.mit.edu/papers/ton:chord/paper-ton.pdf
+In this project, you have to implement a Twitter Clone and a client tester/simulator. As of now, Tweeter does not seem to support a WebSocket API. As part I of this project, you need to build an engine that (in part II) will be paired up with WebSockets to provide full functionality. Specific things you have to do are: 
 
-## Project Requirements
+### Implement a Twitter-like engine with the following functionality:
 
-### Input
+- Register account
+- Send tweet. Tweets can have hashtags (e.g. #COP5615isgreat) and mentions (@bestuser).
+- Subscribe to user's tweets.
+- Re-tweets (so that your subscribers get an interesting tweet you got by other means).
+- Allow querying tweets subscribed to, tweets with specific hashtags, tweets in which the user is mentioned (my mentions).
+- If the user is connected, deliver the above types of tweets live (without querying).
 
-The input provided (as command line) will be of the form: numberOfNodes numberOfRequests Where numberOfNodes is the number of peers to be created in the peer-to-peer system and numberOfRequests is the number of requests each peer has to make. When all peers performed that many requests, the program can exit. Each peer should send a request/second.
+### Implement a tester/simulator to test the above
 
-### Actor modeling
+- Simulate as many users as you can.
+- Simulate periods of live connection and disconnection for users.
+- Simulate a Zipf distribution on the number of subscribers. For accounts with a lot of subscribers, increase the number of tweets. Make - some of these messages re-tweets.
 
-In this project, you have to use exclusively the AKKA actor framework (projects that do not use multiple actors or use any other form of parallelism will receive no credit).  You should have one actor for each of the peers modeled.
+### Other considerations:
+
+- The client part (send/receive tweets) and the engine (distribute tweets) have to be in separate processes. Preferably, you use multiple independent client processes that simulate thousands of clients and a single-engine process.
+- You need to measure various aspects of your simulator and report performance.
+- More detail in the lecture as the project progresses.
 
 ### Output
 
-Print the average number of hops (node connections) that have to be traversed to deliver a message.
-
-### Example:
-
-
 ```F#
-dotnet fsi Project3.fsx 2500 100
+dotnet fsi Server.fsx
+dotnet fsi Client.fsx 1000
 ```
 ```F#
-Average number of hops (node connections) that have to be traversed to deliver a message : 5.295244
+lhost%3A5000-1] Removing receive buffers for [akka.tcp://Twitter@localhost:8123]->[akka.tcp://Twitter@localhost:5000]
+[INFO][30-11-2021 22:49:45][Thread 0008][remoting (akka://Twitter)] Remoting shut down
+[INFO][30-11-2021 22:49:45][Thread 0022][remoting-terminator] Remoting shut 
+down.
+**********************************************************************      
+The time taken to register 1000 users is 1227.643000
+The time taken to subscribe in Zipf distance for 1000 users is 1915.750200  
+The time taken to send tweets for 1000 users is 571.997200
+The time taken to perform random operations for 1000 users is 792.758100    
+**********************************************************************      
+PS C:\Users\Parth Gupta\desktop\Project 4>
 ```
 
 ## Submitted By:
 
 Name: Parth Gupta, UFID: 91997064
-
-## What is Working?
-
-- Implemented the network join and routing as described in the Chord paper and encoded the application that associates a key with a string.
-- After implementation of Chord Algorithm, I am printing the average hop count that has to be traversed to deliver a message.
 
 ## Some Results of my Algorithm:
 
